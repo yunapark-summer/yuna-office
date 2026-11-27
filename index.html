@@ -209,12 +209,14 @@
     position:absolute; border-radius:12px;
     background:rgba(255,253,248,.82);
     border:1.5px dashed #DCC6A6;
-    display:flex; flex-direction:column; gap:2px;
-    align-items:center; justify-content:center;
-    font-size:9.5px; font-weight:800; color:#A08563; letter-spacing:-.02em;
-    text-align:center; line-height:1.25;
+    display:flex; flex-direction:column; gap:1px;
+    align-items:flex-start; justify-content:flex-start;
+    padding:7px 9px;
+    font-size:9.5px; font-weight:800; color:#AE9673; letter-spacing:-.02em;
+    text-align:left; line-height:1.3;
   }
-  .room .r-em{font-size:15px; opacity:.75}
+  .room .r-em{font-size:13px; opacity:.8}
+  .room .r-sub{font-size:8px; font-weight:600; color:#C6B295; letter-spacing:-.02em}
   .r-meet{left:4%; top:5%; width:45%; height:38%}
   .r-cmd{left:27%; top:47%; width:40%; height:31%}
   .r-lounge{left:4%; top:47%; width:20%; height:44%}
@@ -224,7 +226,7 @@
   .pin{
     position:absolute; transform:translate(-50%,-50%);
     display:flex; align-items:center; gap:4px;
-    padding:5px 9px 5px 7px; border-radius:999px;
+    padding:4px 8px 4px 6px; border-radius:999px;
     background:rgba(255,253,248,.94);
     border:1px solid rgba(255,255,255,.9);
     box-shadow:0 3px 10px rgba(97,63,32,.28), 0 1px 0 rgba(255,255,255,.8) inset;
@@ -616,10 +618,10 @@
     <div class="card" style="padding:10px">
       <div class="map motion" id="officeMap">
         <div class="map-flat">
-          <div class="room r-meet"><span class="r-em">🏛️</span>대회의실</div>
-          <div class="room r-cmd"><span class="r-em">🎯</span>지휘실</div>
-          <div class="room r-lounge"><span class="r-em">☕</span>라운지</div>
-          <div class="room r-work"><span class="r-em">💻</span>작업 데스크</div>
+          <div class="room r-meet"><span class="r-em">🏛️</span>대회의실<span class="r-sub">🪑 6석 테이블</span></div>
+          <div class="room r-cmd"><span class="r-em">🎯</span>지휘실<span class="r-sub">🖥️ 대장님 책상</span></div>
+          <div class="room r-lounge"><span class="r-em">☕</span>라운지<span class="r-sub">🛋️ 소파</span></div>
+          <div class="room r-work"><span class="r-em">💻</span>작업 데스크<span class="r-sub">🖥️ 데스크 3</span></div>
         </div>
         <img class="map-img" src="assets/office-clay.jpg" alt="따뜻한 우드 톤 클레이 3D 오피스 — 대회의실, 지휘실, 작업 데스크, 라운지" loading="eager" decoding="async">
         <button class="pin pin-meet" data-room="hall" aria-label="대회의실로 이동"><span class="p-em">🏛️</span>대회의실<i class="p-live"></i></button>
