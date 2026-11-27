@@ -217,6 +217,18 @@
   }
   .room .r-em{font-size:13px; opacity:.8}
   .room .r-sub{font-size:8px; font-weight:600; color:#C6B295; letter-spacing:-.02em}
+  .room::before{
+    content:""; position:absolute; left:50%; top:58%; transform:translate(-50%,-50%);
+    background:#EBD5B6; border:1px solid #E1C8A5; border-radius:9px;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+  }
+  .r-meet::before{width:56%; height:20%; box-shadow:0 0 0 5px rgba(235,213,182,.32), 0 1px 0 rgba(255,255,255,.6) inset}
+  .r-cmd::before{width:46%; height:15%; top:60%}
+  .r-lounge::before{width:64%; height:16%; top:62%}
+  .r-work::before{
+    width:56%; height:44%; top:54%; border:none; border-radius:0;
+    background:repeating-linear-gradient(180deg, #EBD5B6 0 14%, rgba(0,0,0,0) 14% 33%);
+  }
   .r-meet{left:4%; top:5%; width:45%; height:38%}
   .r-cmd{left:27%; top:47%; width:40%; height:31%}
   .r-lounge{left:4%; top:47%; width:20%; height:44%}
