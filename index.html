@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>👑 유나 비서실</title>
+<meta name="theme-color" content="#FAF6EE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="유나님 전용 비서실 — 오피스 맵, 회의실, 작업실, 비서현황, AI한도, 메모">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+<style>
+  :root{
+    --cream:#FAF6EE;
+    --cream-2:#F3EADB;
+    --card:#FFFDF8;
+    --card-2:#FBF5EA;
+    --brown:#8B4513;
+    --brown-2:#9A4D16;
+    --brown-3:#B8703C;
+    --soft:#E7D7C1;
+    --line:#EADFCC;
+    --ink:#3D2A1D;
+    --ink-2:#5C4433;
+    --muted:#93806C;
+    --green:#4E9B6A;
+    --green-soft:#E4F0E6;
+    --gold:#C9973F;
+    --shadow:0 2px 4px rgba(109,74,43,.05), 0 8px 22px rgba(109,74,43,.07);
+    --shadow-lg:0 10px 34px rgba(109,74,43,.14);
+    --r:20px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0; padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -140px, #FFF6E4 0%, rgba(255,246,228,0) 70%),
+      radial-gradient(600px 300px at 100% 100%, #F6EBDC 0%, rgba(246,235,220,0) 65%),
+      var(--cream);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-size:15px;
+    line-height:1.5;
+    letter-spacing:-.012em;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit; color:inherit; cursor:pointer; border:none; background:none}
+  input,textarea{font-family:inherit; font-size:15px; color:inherit}
+  ::selection{background:#F0D9BE}
+
+  .app{
+    max-width:560px;
+    margin:0 auto;
+    padding:0 14px calc(28px + env(safe-area-inset-bottom));
+  }
+
+  /* ---------- header ---------- */
+  header.top{
+    position:sticky; top:0; z-index:60;
+    padding:calc(12px + env(safe-area-inset-top)) 14px 10px;
+    margin:0 -14px 12px;
+    background:linear-gradient(180deg, rgba(250,246,238,.98) 62%, rgba(250,246,238,.82) 100%);
+    backdrop-filter:blur(14px) saturate(1.1);
+    -webkit-backdrop-filter:blur(14px) saturate(1.1);
+    border-bottom:1px solid rgba(234,223,204,.7);
+  }
+  .top-inner{max-width:532px; margin:0 auto; display:flex; align-items:center; gap:10px}
+  .brand{display:flex; align-items:center; gap:9px; min-width:0}
+  .brand-mark{
+    width:38px;height:38px;border-radius:13px;flex:0 0 auto;
+    display:grid;place-items:center;font-size:19px;
+    background:linear-gradient(150deg,#FFF8EA,#F0DEC4);
+    border:1px solid #EAD9BF;
+    box-shadow:0 2px 8px rgba(139,69,19,.12), inset 0 1px 0 #fff;
+  }
+  .brand-txt{min-width:0}
+  .brand-title{font-size:16.5px; font-weight:800; letter-spacing:-.03em; color:#4A3120; margin:0; white-space:nowrap}
+  .brand-sub{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:11.5px;font-weight:600;color:#7A8E7C;
+    margin-top:1px; white-space:nowrap;
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 3px rgba(78,155,106,.14)}
+  .dot.live{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(78,155,106,.14)}50%{box-shadow:0 0 0 6px rgba(78,155,106,.06)}}
+  .save-badge{
+    margin-left:auto; flex:0 0 auto;
+    display:inline-flex;align-items:center;gap:5px;
+    padding:7px 11px;border-radius:999px;
+    background:#F1F7F1;border:1px solid #DCEBDD;
+    color:#4E7A5C;font-size:11px;font-weight:700;letter-spacing:-.01em;
+    transition:transform .18s ease, background .2s;
+  }
+  .save-badge.flash{background:#E2F3E4; transform:scale(1.04)}
+
+  /* ---------- tabs ---------- */
+  nav.tabs{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:7px;
+    margin:0 0 14px;
+  }
+  .tab{
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    padding:11px 4px; border-radius:16px;
+    background:var(--card); border:1px solid var(--line);
+    font-size:12.5px; font-weight:700; color:var(--ink-2);
+    letter-spacing:-.03em;
+    box-shadow:0 1px 2px rgba(109,74,43,.04);
+    transition:all .18s ease;
+  }
+  .tab .ico{font-size:14px; line-height:1}
+  .tab:active{transform:scale(.97)}
+  .tab[aria-selected="true"]{
+    background:linear-gradient(160deg,#9A4D16,#7C3D0F);
+    border-color:#7C3D0F; color:#FFF7EA;
+    box-shadow:0 6px 16px rgba(139,69,19,.26), inset 0 1px 0 rgba(255,255,255,.18);
+  }
+
+  /* ---------- cards / panels ---------- */
+  .panel{display:none; animation:fade .26s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)}to{opacity:1; transform:none}}
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    border-radius:var(--r); padding:15px;
+    box-shadow:var(--shadow);
+    margin-bottom:12px;
+  }
+  .card.plain{box-shadow:none; background:var(--card-2)}
+  .h-row{display:flex; align-items:center; gap:8px; margin-bottom:10px}
+  .h-row h2{font-size:14px; font-weight:800; margin:0; letter-spacing:-.02em; color:#4A3120}
+  .h-row .sub{font-size:11.5px; color:var(--muted); font-weight:600; margin-left:auto; white-space:nowrap}
+  .muted{color:var(--muted)}
+  .tiny{font-size:11.5px}
+
+  /* ---------- office hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:
+      radial-gradient(120% 130% at 0% 0%, #FFF6E7 0%, #F7E9D4 46%, #F3E1C6 100%);
+    border:1px solid #EBD9BE;
+    border-radius:22px; padding:16px 15px;
+    box-shadow:0 6px 20px rgba(139,69,19,.10);
+    margin-bottom:11px;
+  }
+  .hero::after{
+    content:""; position:absolute; right:-24px; top:-30px; width:120px; height:120px;
+    background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%);
+  }
+  .hero-tag{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:11px;font-weight:800;color:#8A5A2B;
+    background:rgba(255,255,255,.72); border:1px solid #EFDFC7;
+    padding:4px 9px; border-radius:999px; margin-bottom:8px;
+    letter-spacing:-.02em;
+  }
+  .hero h1{font-size:17px; font-weight:900; margin:0 0 3px; color:#4A3120; letter-spacing:-.035em}
+  .hero p{margin:0; font-size:12.5px; color:#7A6144; font-weight:600; letter-spacing:-.02em}
+  .hero p + p{margin-top:2px; color:#8C7659; font-weight:500}
+
+  /* ---------- chips ---------- */
+  .chip-row{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:11px}
+  .seg{
+    display:inline-flex; padding:3px; gap:2px;
+    background:#F0E5D3; border:1px solid #E7D8C0; border-radius:12px;
+  }
+  .seg button{
+    padding:6px 11px; border-radius:9px; font-size:12px; font-weight:700; color:#8B7154;
+    letter-spacing:-.02em; transition:all .16s ease;
+  }
+  .seg button.on{background:#FFFDF8; color:#7C3D0F; box-shadow:0 1px 4px rgba(139,69,19,.16)}
+  .pill{
+    display:inline-flex;align-items:center;gap:4px;
+    padding:6px 10px;border-radius:11px;
+    background:#FFFDF8;border:1px solid #E9DCC7;
+    font-size:11.5px;font-weight:700;color:#7B6146;letter-spacing:-.02em;
+    transition:all .16s ease;
+  }
+  .pill:active{transform:scale(.96)}
+  .pill.on{background:#FBF1E2; border-color:#E5CCA8; color:#8B4513}
+  .pill.steady{cursor:default}
+  .pill .m-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .pill .m-dot.off{background:#C0B3A5}
+  .spacer{flex:1}
+
+  /* ---------- map ---------- */
+  .map{
+    position:relative; width:100%; aspect-ratio:1331/1182;
+    border-radius:18px; overflow:hidden;
+    background:#EFE2CE;
+    border:1px solid #E4D3B9;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.4), 0 4px 16px rgba(139,69,19,.10);
+    touch-action:manipulation;
+  }
+  .map-img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block}
+  .map .map-img{opacity:0; transition:opacity .35s ease}
+  .map.clay .map-img{opacity:1}
+
+  /* flat (basic) map */
+  .map-flat{
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(190,154,111,.16) 0 1px, rgba(0,0,0,0) 1px 34px),
+      linear-gradient(160deg,#F6EBD8,#EFDFC6);
+    opacity:1; transition:opacity .35s ease;
+  }
+  .map.clay .map-flat{opacity:0}
+  .room{
+    position:absolute; border-radius:12px;
+    background:rgba(255,253,248,.82);
+    border:1.5px dashed #DCC6A6;
+    display:flex; flex-direction:column; gap:2px;
+    align-items:center; justify-content:center;
+    font-size:9.5px; font-weight:800; color:#A08563; letter-spacing:-.02em;
+    text-align:center; line-height:1.25;
+  }
+  .room .r-em{font-size:15px; opacity:.75}
+  .r-meet{left:4%; top:5%; width:45%; height:38%}
+  .r-cmd{left:27%; top:47%; width:40%; height:31%}
+  .r-lounge{left:4%; top:47%; width:20%; height:44%}
+  .r-work{left:70%; top:5%; width:26%; height:73%}
+
+  /* pins */
+  .pin{
+    position:absolute; transform:translate(-50%,-50%);
+    display:flex; align-items:center; gap:4px;
+    padding:5px 9px 5px 7px; border-radius:999px;
+    background:rgba(255,253,248,.94);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:0 3px 10px rgba(97,63,32,.28), 0 1px 0 rgba(255,255,255,.8) inset;
+    font-size:11px; font-weight:800; color:#5A3B22; white-space:nowrap;
+    letter-spacing:-.03em;
+    transition:transform .16s ease, box-shadow .16s ease;
+    z-index:3;
+  }
+  .pin .p-em{font-size:12px; line-height:1}
+  .pin:hover{box-shadow:0 5px 16px rgba(97,63,32,.34)}
+  .pin:active{transform:translate(-50%,-50%) scale(.94)}
+  .pin::after{
+    content:""; position:absolute; left:50%; bottom:-4px; width:7px;height:7px;
+    background:rgba(255,253,248,.94); transform:translateX(-50%) rotate(45deg);
+    border-right:1px solid rgba(255,255,255,.9); border-bottom:1px solid rgba(255,255,255,.9);
+    border-radius:0 0 2px 0;
+  }
+  .pin .p-live{
+    width:5px;height:5px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 0 2px rgba(78,155,106,.2);
+  }
+  /* clay positions (over generated art) */
+  .map.clay .pin-meet{left:27%; top:31%}
+  .map.clay .pin-cmd{left:52%; top:56%}
+  .map.clay .pin-lounge{left:17%; top:68%}
+  /* flat positions */
+  .map:not(.clay) .pin-meet{left:26%; top:25%}
+  .map:not(.clay) .pin-cmd{left:47%; top:63%}
+  .map:not(.clay) .pin-lounge{left:14%; top:70%}
+
+  .map.motion .pin{animation:bob 3.4s ease-in-out infinite}
+  .map.motion .pin-cmd{animation-delay:.4s}
+  .map.motion .pin-lounge{animation-delay:.9s}
+  @keyframes bob{
+    0%,100%{transform:translate(-50%,-50%)}
+    50%{transform:translate(-50%,calc(-50% - 5px))}
+  }
+  .map-hint{
+    display:flex; align-items:center; gap:5px;
+    font-size:11px; color:#9C8769; font-weight:600; margin-top:8px;
+    justify-content:center;
+  }
+
+  /* room list under map */
+  .room-list{display:grid; gap:7px; margin-top:12px}
+  .room-item{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 12px; border-radius:14px;
+    background:#FFFDF8; border:1px solid var(--line);
+    text-align:left; width:100%; transition:all .16s ease;
+  }
+  .room-item:active{transform:scale(.985); background:#FBF4E8}
+  .room-item .ri-em{
+    width:32px;height:32px;border-radius:11px;flex:0 0 auto;
+    display:grid;place-items:center;font-size:15px;
+    background:linear-gradient(150deg,#FBF1E1,#F2E2C9); border:1px solid #EEDDC2;
+  }
+  .room-item .ri-txt{min-width:0; flex:1}
+  .room-item .ri-name{font-size:13px; font-weight:800; color:#4A3120; letter-spacing:-.03em}
+  .room-item .ri-desc{font-size:11px; color:var(--muted); font-weight:600; margin-top:1px; letter-spacing:-.02em}
+  .room-item .ri-go{font-size:11px; color:#B08A5E; font-weight:800; flex:0 0 auto}
+
+  /* ---------- meeting ---------- */
+  .subtabs{display:flex; gap:6px; margin-bottom:10px}
+  .subtab{
+    flex:1; padding:9px 4px; border-radius:12px;
+    background:#FFFDF8; border:1px solid var(--line);
+    font-size:12px; font-weight:700; color:#7B6146; letter-spacing:-.03em;
+    transition:all .16s ease;
+  }
+  .subtab[aria-selected="true"]{
+    background:#F6EBD9; border-color:#E3CDAA; color:#7C3D0F;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.6);
+  }
+  .chat-wrap{
+    position:relative;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .chat-head{
+    display:flex; align-items:center; gap:8px;
+    padding:11px 13px; border-bottom:1px solid #F1E7D7;
+    background:linear-gradient(180deg,#FFFDF8,#FCF6EB);
+  }
+  .chat-head .ch-em{font-size:16px}
+  .chat-head .ch-t{font-size:12.5px; font-weight:800; color:#4A3120; letter-spacing:-.03em}
+  .chat-head .ch-s{font-size:10.5px; color:var(--muted); font-weight:600}
+  .chat-head .ch-right{margin-left:auto; font-size:10px; color:#A9967F; font-weight:700; white-space:nowrap}
+  .chat{
+    height:min(46vh,380px); min-height:250px; overflow-y:auto;
+    padding:13px 12px 6px; display:flex; flex-direction:column; gap:9px;
+    background:
+      radial-gradient(400px 200px at 100% 0%, #FFFBF3, rgba(255,251,243,0)),
+      #FFFDF8;
+    scroll-behavior:smooth;
+    overscroll-behavior:contain;
+  }
+  .chat::-webkit-scrollbar{width:6px}
+  .chat::-webkit-scrollbar-thumb{background:#E6D7C1; border-radius:99px}
+  .msg{display:flex; gap:7px; align-items:flex-start; max-width:100%}
+  .msg.me{flex-direction:row-reverse}
+  .av{
+    width:27px;height:27px;border-radius:9px;flex:0 0 auto;
+    display:grid;place-items:center;font-size:13px;
+    background:linear-gradient(150deg,#FBF1E1,#F0DFC5);
+    border:1px solid #EBD9BD; box-shadow:0 1px 2px rgba(139,69,19,.08);
+  }
+  .av.me{background:linear-gradient(150deg,#9A4D16,#7C3D0F); border-color:#7C3D0F; color:#fff}
+  .bubble-wrap{min-width:0; max-width:82%}
+  .who{
+    display:flex; align-items:center; gap:4px;
+    font-size:10px; font-weight:800; color:#9A7B56; margin:0 0 3px 2px; letter-spacing:-.02em;
+  }
+  .msg.me .who{justify-content:flex-end; margin:0 2px 3px 0; color:#B08A5E}
+  .who .role{font-weight:600; color:#BCA88F}
+  .bubble{
+    padding:9px 11px; border-radius:13px;
+    background:#FBF4E8; border:1px solid #EFE2CE;
+    font-size:13.5px; line-height:1.55; color:#40301F;
+    letter-spacing:-.015em; word-break:break-word; white-space:pre-wrap;
+    border-top-left-radius:5px;
+  }
+  .msg.me .bubble{
+    background:linear-gradient(160deg,#9A4D16,#85410F); color:#FFF8EE;
+    border-color:#85410F; border-top-left-radius:13px; border-top-right-radius:5px;
+    box-shadow:0 3px 10px rgba(139,69,19,.18);
+  }
+  .stamp{font-size:9.5px; color:#B9A78F; font-weight:600; margin-top:3px; padding:0 3px}
+  .msg.me .stamp{text-align:right}
+  .typing .bubble{padding:11px 13px; display:inline-flex; gap:3px; align-items:center}
+  .typing i{
+    width:5px;height:5px;border-radius:50%;background:#C3A583; display:block;
+    animation:ty 1.15s infinite ease-in-out;
+  }
+  .typing i:nth-child(2){animation-delay:.16s}
+  .typing i:nth-child(3){animation-delay:.32s}
+  @keyframes ty{0%,60%,100%{opacity:.35; transform:translateY(0)}30%{opacity:1; transform:translateY(-3px)}}
+
+  .composer{border-top:1px solid #F1E7D7; background:#FCF8F0; padding:9px 10px calc(9px + env(safe-area-inset-bottom))}
+  .mentions{display:flex; gap:5px; overflow-x:auto; padding:0 1px 8px; scrollbar-width:none}
+  .mentions::-webkit-scrollbar{display:none}
+  .m-chip{
+    flex:0 0 auto; padding:5px 9px; border-radius:999px;
+    background:#FFFDF8; border:1px solid #EADDC7;
+    font-size:11px; font-weight:700; color:#8B6F4E; letter-spacing:-.03em;
+    transition:all .15s ease;
+  }
+  .m-chip:active{transform:scale(.95)}
+  .m-chip.sender{
+    background:linear-gradient(150deg,#9A4D16,#7C3D0F); color:#FFF6E9; border-color:#7C3D0F;
+    box-shadow:0 2px 6px rgba(139,69,19,.2);
+  }
+  .m-chip.mentioned{background:#F6E3C8; border-color:#E4C79B; color:#8B4513}
+  .input-row{display:flex; gap:7px; align-items:flex-end}
+  .input-row textarea{
+    flex:1; resize:none; min-height:40px; max-height:104px;
+    padding:10px 12px; border-radius:14px;
+    border:1px solid #E8DBC6; background:#FFFDF8;
+    line-height:1.4; letter-spacing:-.01em;
+    outline:none; transition:border .16s, box-shadow .16s;
+  }
+  .input-row textarea:focus{border-color:#D9BC90; box-shadow:0 0 0 3px rgba(201,151,63,.12)}
+  .send{
+    width:42px;height:42px;border-radius:14px; flex:0 0 auto;
+    display:grid;place-items:center;font-size:16px;
+    background:linear-gradient(160deg,#9A4D16,#7C3D0F); color:#FFF6E9;
+    box-shadow:0 4px 12px rgba(139,69,19,.28);
+    transition:transform .14s ease, opacity .14s;
+  }
+  .send:active{transform:scale(.93)}
+  .send:disabled{opacity:.4; box-shadow:none}
+
+  /* ---------- workroom ---------- */
+  .progress-line{display:flex; align-items:center; gap:9px; margin-bottom:4px}
+  .bar{flex:1; height:7px; border-radius:99px; background:#F0E4D1; overflow:hidden}
+  .bar > span{
+    display:block; height:100%; width:0%;
+    background:linear-gradient(90deg,#C9973F,#9A4D16);
+    border-radius:99px; transition:width .35s ease;
+  }
+  .add-row{display:flex; gap:7px; margin:11px 0 4px}
+  .add-row input{
+    flex:1; padding:11px 12px; border-radius:13px;
+    border:1px solid #E8DBC6; background:#FFFDF8; outline:none;
+    transition:border .16s, box-shadow .16s;
+  }
+  .add-row input:focus{border-color:#D9BC90; box-shadow:0 0 0 3px rgba(201,151,63,.12)}
+  .add-btn{
+    padding:0 15px; border-radius:13px; font-size:13px; font-weight:800; letter-spacing:-.02em;
+    background:linear-gradient(160deg,#9A4D16,#7C3D0F); color:#FFF6E9;
+    box-shadow:0 4px 12px rgba(139,69,19,.22);
+  }
+  .add-btn:active{transform:scale(.96)}
+  .filters{display:flex; gap:5px; margin:10px 0 2px}
+  .filt{
+    padding:5px 10px; border-radius:999px; font-size:11px; font-weight:700;
+    border:1px solid #EADDC7; background:#FFFDF8; color:#8B7154; letter-spacing:-.02em;
+  }
+  .filt.on{background:#F6EBD9; border-color:#E3CDAA; color:#7C3D0F}
+  .todo{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 4px; border-bottom:1px solid #F4EBDD;
+  }
+  .todo:last-child{border-bottom:none}
+  .ck{
+    width:21px;height:21px;border-radius:7px;flex:0 0 auto;
+    border:1.8px solid #D9C5A7; background:#FFFDF8;
+    display:grid;place-items:center; font-size:12px; color:transparent;
+    transition:all .16s ease;
+  }
+  .ck.on{background:linear-gradient(150deg,#B26A2E,#8B4513); border-color:#8B4513; color:#fff}
+  .todo-txt{flex:1; font-size:13.5px; color:#40301F; letter-spacing:-.02em; word-break:break-word}
+  .todo.done .todo-txt{color:#AE9C87; text-decoration:line-through}
+  .del{
+    width:26px;height:26px;border-radius:9px;flex:0 0 auto;
+    display:grid;place-items:center;font-size:13px;color:#C4B29C;
+    transition:all .15s ease;
+  }
+  .del:active{background:#F7E7E1; color:#B4603F}
+  .empty{
+    text-align:center; padding:22px 10px; color:#B3A18C; font-size:12.5px; font-weight:600;
+  }
+
+  /* ---------- assistant status ---------- */
+  .sum-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 12px; border-radius:14px;
+    background:#F7EFE1; border:1px solid #EEDFC7;
+    font-size:11.5px; font-weight:700; color:#8A6B47; margin-bottom:11px;
+  }
+  .a-card{
+    display:flex; gap:11px; padding:13px;
+    background:var(--card); border:1px solid var(--line);
+    border-radius:17px; box-shadow:var(--shadow); margin-bottom:9px;
+  }
+  .a-av{
+    width:44px;height:44px;border-radius:15px;flex:0 0 auto;
+    display:grid;place-items:center;font-size:21px;
+    background:linear-gradient(150deg,#FBF1E1,#F1DFC4); border:1px solid #EDDCC0;
+    box-shadow:0 2px 6px rgba(139,69,19,.09), inset 0 1px 0 #fff;
+  }
+  .a-body{min-width:0; flex:1}
+  .a-top{display:flex; align-items:center; gap:6px}
+  .a-name{font-size:14px; font-weight:900; color:#4A3120; letter-spacing:-.03em}
+  .a-role{font-size:10.5px; color:#A28B71; font-weight:700}
+  .status{
+    margin-left:auto; flex:0 0 auto;
+    display:inline-flex;align-items:center;gap:4px;
+    padding:4px 8px; border-radius:999px; font-size:10px; font-weight:800;
+    letter-spacing:-.02em; border:1px solid transparent;
+    transition:all .16s ease;
+  }
+  .status.on{background:#E9F1E9; color:#4E7A5C; border-color:#DCEBDD}
+  .status.busy{background:#FBF0DC; color:#9A7124; border-color:#F0E0BF}
+  .status.rest{background:#F0EDE9; color:#8C8478; border-color:#E6E1D9}
+  .a-task{
+    font-size:12px; color:#6B563F; margin-top:6px; letter-spacing:-.02em;
+    background:#FBF6EC; border:1px solid #F1E7D6; border-radius:10px; padding:7px 9px;
+  }
+  .a-task b{font-weight:800; color:#8B4513}
+  .a-tags{display:flex; gap:4px; flex-wrap:wrap; margin-top:6px}
+  .tag{font-size:10px; font-weight:700; color:#8F7A61; background:#F6EEE0; border:1px solid #EFE3D1; padding:3px 7px; border-radius:8px}
+
+  /* ---------- AI gauge ---------- */
+  .gauge{margin-bottom:13px}
+  .gauge:last-of-type{margin-bottom:0}
+  .g-top{display:flex; align-items:baseline; gap:6px; margin-bottom:6px}
+  .g-name{font-size:12.5px; font-weight:800; color:#4A3120; letter-spacing:-.03em}
+  .g-val{margin-left:auto; font-size:12.5px; font-weight:900; color:#9A4D16; font-variant-numeric:tabular-nums}
+  .g-bar{height:10px; border-radius:99px; background:#F1E5D3; overflow:hidden; position:relative}
+  .g-bar > span{
+    display:block; height:100%; border-radius:99px;
+    background:linear-gradient(90deg,#D9A45C,#9A4D16);
+    transition:width .4s cubic-bezier(.3,.8,.3,1);
+  }
+  .g-bar.low > span{background:linear-gradient(90deg,#A9C7A3,#5E9560)}
+  .g-bar.hot > span{background:linear-gradient(90deg,#D98A5C,#B4471E)}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height:22px; background:transparent; margin:2px 0 0;
+  }
+  input[type=range]::-webkit-slider-runnable-track{height:22px; background:transparent}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:20px;height:20px;border-radius:50%;
+    background:#FFFDF8; border:2px solid #B26A2E; margin-top:1px;
+    box-shadow:0 2px 6px rgba(139,69,19,.25);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:18px;height:18px;border-radius:50%; background:#FFFDF8;
+    border:2px solid #B26A2E; box-shadow:0 2px 6px rgba(139,69,19,.25);
+  }
+  .g-note{font-size:10.5px; color:#A28B71; font-weight:600; margin-top:2px}
+  .insight{
+    margin-top:12px; padding:11px 12px; border-radius:13px;
+    background:linear-gradient(140deg,#FBF1E0,#F7EBD7); border:1px solid #F0DFC5;
+    font-size:12px; color:#7A5B36; font-weight:600; line-height:1.55; letter-spacing:-.02em;
+  }
+  .insight b{color:#8B4513}
+
+  /* ---------- memo ---------- */
+  .memo-area{
+    width:100%; min-height:min(46vh,340px); resize:vertical;
+    padding:14px; border-radius:15px;
+    border:1px solid #EBDFCB;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 27px, #F3EAD9 27px 28px),
+      #FFFDF9;
+    line-height:28px; font-size:14px; letter-spacing:-.01em;
+    outline:none; transition:border .16s, box-shadow .16s;
+  }
+  .memo-area:focus{border-color:#D9BC90; box-shadow:0 0 0 3px rgba(201,151,63,.1)}
+  .memo-foot{display:flex; align-items:center; gap:8px; margin-top:8px; font-size:10.5px; color:#A28B71; font-weight:700}
+  .ghost{
+    margin-left:auto; padding:5px 9px; border-radius:9px;
+    border:1px solid #EADDC7; background:#FFFDF8; font-size:10.5px; font-weight:700; color:#98795A;
+  }
+  .ghost:active{background:#F8EEE0}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom));
+    transform:translate(-50%, 16px); opacity:0; pointer-events:none;
+    padding:9px 15px; border-radius:999px;
+    background:rgba(74,49,32,.92); color:#FFF6E8; font-size:12px; font-weight:700;
+    box-shadow:0 8px 24px rgba(74,49,32,.3);
+    transition:all .26s ease; z-index:200; letter-spacing:-.02em;
+    backdrop-filter:blur(6px);
+  }
+  .toast.show{opacity:1; transform:translate(-50%,0)}
+
+  footer.foot{
+    text-align:center; font-size:10.5px; color:#B5A48E; font-weight:600;
+    padding:16px 0 4px; letter-spacing:-.02em; line-height:1.7;
+  }
+  @media (max-width:360px){
+    .tab{font-size:11.5px; gap:3px; padding:10px 2px}
+    .brand-title{font-size:15px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important; transition-duration:.001s !important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">
+        <div class="brand-mark">👑</div>
+        <div class="brand-txt">
+          <h1 class="brand-title">유나 비서실</h1>
+          <span class="brand-sub"><i class="dot"></i>유나님 전용</span>
+        </div>
+      </div>
+      <div class="save-badge" id="saveBadge"><i class="dot live"></i>실시간 저장</div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="비서실 메뉴">
+    <button class="tab" role="tab" data-tab="map" aria-selected="true" aria-controls="panel-map"><span class="ico">🗺️</span>오피스 맵</button>
+    <button class="tab" role="tab" data-tab="meeting" aria-selected="false" aria-controls="panel-meeting"><span class="ico">💬</span>회의실</button>
+    <button class="tab" role="tab" data-tab="work" aria-selected="false" aria-controls="panel-work"><span class="ico">📋</span>작업실</button>
+    <button class="tab" role="tab" data-tab="status" aria-selected="false" aria-controls="panel-status"><span class="ico">📊</span>비서현황</button>
+    <button class="tab" role="tab" data-tab="ai" aria-selected="false" aria-controls="panel-ai"><span class="ico">⚡</span>AI한도</button>
+    <button class="tab" role="tab" data-tab="memo" aria-selected="false" aria-controls="panel-memo"><span class="ico">📝</span>메모</button>
+  </nav>
+
+  <!-- ================= 오피스 맵 ================= -->
+  <section class="panel on" id="panel-map" role="tabpanel" aria-labelledby="tab-map">
+    <div class="hero">
+      <span class="hero-tag">👑 YUNA OFFICE</span>
+      <h1>유나 비서실 본부</h1>
+      <p>대장님, 비서 4명이 대기 중이에요</p>
+      <p>방을 눌러 들어가 보세요. 방마다 비서들이 일하고 있어요.</p>
+    </div>
+
+    <div class="chip-row">
+      <div class="seg" role="group" aria-label="맵 스타일">
+        <button id="btnMapBasic" class="on" aria-pressed="true">🗺️ 기본</button>
+        <button id="btnMapClay" aria-pressed="false">🧸 클레이</button>
+      </div>
+      <button class="pill on" id="btnMotion" aria-pressed="true">✨ 움직임 ON</button>
+      <span class="spacer"></span>
+      <span class="pill steady"><i class="m-dot"></i>3개 방 가동</span>
+      <span class="pill steady" id="onCount">👥 ON 5명</span>
+    </div>
+
+    <div class="card" style="padding:10px">
+      <div class="map motion" id="officeMap">
+        <div class="map-flat">
+          <div class="room r-meet"><span class="r-em">🏛️</span>대회의실</div>
+          <div class="room r-cmd"><span class="r-em">🎯</span>지휘실</div>
+          <div class="room r-lounge"><span class="r-em">☕</span>라운지</div>
+          <div class="room r-work"><span class="r-em">💻</span>작업 데스크</div>
+        </div>
+        <img class="map-img" src="assets/office-clay.jpg" alt="따뜻한 우드 톤 클레이 3D 오피스 — 대회의실, 지휘실, 작업 데스크, 라운지" loading="eager" decoding="async">
+        <button class="pin pin-meet" data-room="hall" aria-label="대회의실로 이동"><span class="p-em">🏛️</span>대회의실<i class="p-live"></i></button>
+        <button class="pin pin-cmd" data-room="cmd" aria-label="지휘실로 이동"><span class="p-em">🎯</span>지휘실<i class="p-live"></i></button>
+        <button class="pin pin-lounge" data-room="lounge" aria-label="라운지로 이동"><span class="p-em">☕</span>라운지<i class="p-live"></i></button>
+      </div>
+      <div class="map-hint">👆 방 핀을 누르면 그 방의 회의실로 이동해요</div>
+    </div>
+
+    <div class="room-list">
+      <button class="room-item" data-room="hall">
+        <span class="ri-em">🏛️</span>
+        <span class="ri-txt"><span class="ri-name">대회의실</span><span class="ri-desc">여럿이 모여 크게 정리하는 방</span></span>
+        <span class="ri-go">입장 ›</span>
+      </button>
+      <button class="room-item" data-room="cmd">
+        <span class="ri-em">🎯</span>
+        <span class="ri-txt"><span class="ri-name">지휘실</span><span class="ri-desc">대장님 책상 — 하비서가 상주</span></span>
+        <span class="ri-go">입장 ›</span>
+      </button>
+      <button class="room-item" data-room="lounge">
+        <span class="ri-em">☕</span>
+        <span class="ri-txt"><span class="ri-name">라운지</span><span class="ri-desc">가볍게 이야기하는 소파 자리</span></span>
+        <span class="ri-go">입장 ›</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= 회의실 ================= -->
+  <section class="panel" id="panel-meeting" role="tabpanel" aria-labelledby="tab-meeting">
+    <div class="subtabs" role="tablist" aria-label="회의실 선택">
+      <button class="subtab" role="tab" data-room="hall" aria-selected="true">🏛️ 대회의실</button>
+      <button class="subtab" role="tab" data-room="cmd" aria-selected="false">🎯 지휘실</button>
+      <button class="subtab" role="tab" data-room="lounge" aria-selected="false">☕ 라운지</button>
+    </div>
+
+    <div class="chat-wrap">
+      <div class="chat-head">
+        <span class="ch-em" id="chatEm">🏛️</span>
+        <div>
+          <div class="ch-t" id="chatTitle">대회의실</div>
+          <div class="ch-s" id="chatSub">하비서 · 엠디 · 라미 · 아카이브</div>
+        </div>
+        <span class="ch-right" id="chatCount">0개 대화</span>
+      </div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="composer">
+        <div class="mentions" id="mentions">
+          <button class="m-chip sender" data-sender="me">👑 유나(대장님)</button>
+          <button class="m-chip" data-mention="all">@all</button>
+          <button class="m-chip" data-mention="habi">@하비서</button>
+          <button class="m-chip" data-mention="mdi">@엠디</button>
+          <button class="m-chip" data-mention="rami">@라미</button>
+          <button class="m-chip" data-mention="arch">@아카이브</button>
+        </div>
+        <div class="input-row">
+          <textarea id="msgInput" rows="1" placeholder="대장님, 말씀하세요 (예: @하비서 내일 일정 정리해줘)" enterkeyhint="send" aria-label="메시지 입력"></textarea>
+          <button class="send" id="sendBtn" aria-label="보내기">➤</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 작업실 ================= -->
+  <section class="panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
+    <div class="card">
+      <div class="h-row">
+        <h2>📋 작업실</h2>
+        <span class="sub" id="workCount">0 / 0 완료</span>
+      </div>
+      <div class="progress-line">
+        <div class="bar"><span id="workBar"></span></div>
+        <span class="tiny" style="font-weight:800;color:#9A4D16" id="workPct">0%</span>
+      </div>
+      <div class="add-row">
+        <input id="todoInput" type="text" placeholder="할 일을 적어 두세요" maxlength="80" aria-label="할 일 입력">
+        <button class="add-btn" id="todoAdd">추가</button>
+      </div>
+      <div class="filters" role="group" aria-label="할 일 필터">
+        <button class="filt on" data-filter="all">전체</button>
+        <button class="filt" data-filter="open">진행 중</button>
+        <button class="filt" data-filter="done">완료</button>
+      </div>
+      <div id="todoList"></div>
+    </div>
+  </section>
+
+  <!-- ================= 비서현황 ================= -->
+  <section class="panel" id="panel-status" role="tabpanel" aria-labelledby="tab-status">
+    <div class="sum-bar">
+      <span>🛎️</span>
+      <span id="sumText">4명 중 3명 가동 중 · 대장님 지시 대기</span>
+    </div>
+    <div id="assistList"></div>
+  </section>
+
+  <!-- ================= AI한도 ================= -->
+  <section class="panel" id="panel-ai" role="tabpanel" aria-labelledby="tab-ai">
+    <div class="card">
+      <div class="h-row">
+        <h2>⚡ 오늘의 한도</h2>
+        <span class="sub">직접 조절해 보세요</span>
+      </div>
+      <div class="gauge" data-key="routine">
+        <div class="g-top"><span class="g-name">🌅 오늘의 루틴</span><span class="g-val">0%</span></div>
+        <div class="g-bar"><span></span></div>
+        <input type="range" min="0" max="100" step="1" value="62" aria-label="오늘의 루틴 진행률">
+        <div class="g-note">아침 브리핑 · 산책 · 업무 준비</div>
+      </div>
+      <div class="gauge" data-key="workload">
+        <div class="g-top"><span class="g-name">📦 업무량</span><span class="g-val">0%</span></div>
+        <div class="g-bar"><span></span></div>
+        <input type="range" min="0" max="100" step="1" value="46" aria-label="업무량">
+        <div class="g-note">오늘 처리해야 할 일의 양</div>
+      </div>
+      <div class="gauge" data-key="energy">
+        <div class="g-top"><span class="g-name">🔋 집중 에너지</span><span class="g-val">0%</span></div>
+        <div class="g-bar"><span></span></div>
+        <input type="range" min="0" max="100" step="1" value="74" aria-label="집중 에너지">
+        <div class="g-note">지금 집중할 수 있는 힘</div>
+      </div>
+      <div class="insight" id="aiInsight">값을 움직여 보면 오늘의 제안이 바뀌어요.</div>
+      <div style="display:flex;margin-top:11px">
+        <button class="ghost" id="aiReset">기본값으로</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 메모 ================= -->
+  <section class="panel" id="panel-memo" role="tabpanel" aria-labelledby="tab-memo">
+    <div class="card">
+      <div class="h-row">
+        <h2>📝 메모</h2>
+        <span class="sub" id="memoSaved">자동 저장</span>
+      </div>
+      <textarea class="memo-area" id="memo" placeholder="떠오르는 생각을 그냥 적어 두세요.&#10;잠깐 적어도 여기 남아 있어요."></textarea>
+      <div class="memo-foot">
+        <span id="memoCount">0자</span>
+        <button class="ghost" id="memoClear">전체 지우기</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    유나 비서실 · 이 브라우저에만 저장되는 개인 공간<br>
+    기록은 localStorage에 남고 서버로 보내지 않아요
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- storage ---------------- */
+  var PREFIX = "yunaOffice.v1.";
+  function load(key, fb){
+    try{
+      var raw = localStorage.getItem(PREFIX + key);
+      if(raw === null) return fb;
+      return JSON.parse(raw);
+    }catch(e){ return fb; }
+  }
+  function save(key, val){
+    try{ localStorage.setItem(PREFIX + key, JSON.stringify(val)); return true; }
+    catch(e){ return false; }
+  }
+
+  var badge = document.getElementById("saveBadge");
+  var badgeTimer = null;
+  function flashSave(label){
+    if(badgeTimer) clearTimeout(badgeTimer);
+    badge.classList.add("flash");
+    badge.innerHTML = '<i class="dot live"></i>' + (label || "저장됨");
+    badgeTimer = setTimeout(function(){
+      badge.classList.remove("flash");
+      badge.innerHTML = '<i class="dot live"></i>실시간 저장';
+    }, 1100);
+  }
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 1600);
+  }
+  function nowHM(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  /* ---------------- tabs ---------------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  var panels = {
+    map: document.getElementById("panel-map"),
+    meeting: document.getElementById("panel-meeting"),
+    work: document.getElementById("panel-work"),
+    status: document.getElementById("panel-status"),
+    ai: document.getElementById("panel-ai"),
+    memo: document.getElementById("panel-memo")
+  };
+  var currentTab = "map";
+  function setTab(name){
+    if(!panels[name]) return;
+    currentTab = name;
+    tabs.forEach(function(t){
+      var on = t.dataset.tab === name;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    Object.keys(panels).forEach(function(k){
+      panels[k].classList.toggle("on", k === name);
+    });
+    save("tab", name);
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){ setTab(t.dataset.tab); });
+  });
+
+  /* ---------------- assistants ---------------- */
+  var ASSISTANTS = {
+    habi: {name:"하비서", emoji:"🗂️", role:"총괄·일정 비서", tag:"일정 · 총괄", status:"busy",  statusText:"지휘 중",   last:"오늘 일정 순서를 정리해 두었어요.", tags:["캘린더","일정 조율","리마인드"]},
+    mdi:  {name:"엠디",   emoji:"🛍️", role:"커머스·트렌드 비서", tag:"커머스 · 트렌드", status:"on", statusText:"대기 중", last:"이번 주 인기 상품 흐름을 훑어봤어요.", tags:["상품 기획","트렌드","리뷰"]},
+    rami: {name:"라미",   emoji:"🐾", role:"생활·반려견 케어 비서", tag:"생활 · 케어", status:"busy", statusText:"산책 준비", last:"산책 시간과 급여 시간을 맞춰 뒀어요.", tags:["산책","급여","장보기"]},
+    arch: {name:"아카이브", emoji:"🗃️", role:"AI·노션 정리 비서", tag:"AI · 노션", status:"on", statusText:"정리 중", last:"새로 저장한 링크를 노션에 정리했어요.", tags:["노션","요약","아카이브"]}
+  };
+  var ORDER = ["habi","mdi","rami","arch"];
+  var ROOMS = {
+    hall:   {em:"🏛️", name:"대회의실", sub:"하비서 · 엠디 · 라미 · 아카이브", place:"큰 테이블에 다 같이 모였어요."},
+    cmd:    {em:"🎯", name:"지휘실",   sub:"하비서 상주 · 지시 하달", place:"대장님 책상 앞, 하비서가 기다리고 있어요."},
+    lounge: {em:"☕", name:"라운지",   sub:"소파에서 가볍게", place:"소파에 앉아 이야기하는 자리예요."}
+  };
+
+  /* ---------------- meeting room ---------------- */
+  var currentRoom = load("room", "hall");
+  var chatEl = document.getElementById("chat");
+  var inputEl = document.getElementById("msgInput");
+  var sendBtn = document.getElementById("sendBtn");
+  var pendingSet = {};
+
+  function msgsOf(room){ return load("chat." + room, []); }
+  function setMsgs(room, list){
+    if(list.length > 240) list = list.slice(list.length - 240);
+    save("chat." + room, list);
+  }
+
+  function seedRoom(room){
+    var list = msgsOf(room);
+    if(list.length) return;
+    var t = Date.now();
+    var seeds;
+    if(room === "hall"){
+      seeds = [
+        {who:"habi", text:"대장님, 대회의실 준비됐습니다. 4명 모두 앉아 있어요. 오늘 정리할 것부터 말씀해 주세요.", dt: 3},
+        {who:"mdi",  text:"저는 상품·트렌드 쪽 볼게요. 궁금한 카테고리 있으면 던져 주세요.", dt: 2},
+        {who:"arch", text:"정리할 링크나 메모 있으면 여기로 주시면 노션에 남겨 둘게요.", dt: 1}
+      ];
+    } else if(room === "cmd"){
+      seeds = [
+        {who:"habi", text:"지휘실입니다, 대장님. 일정·할 일·알림은 여기서 바로 처리할게요.", dt: 1}
+      ];
+    } else {
+      seeds = [
+        {who:"rami", text:"라운지예요. 강아지 산책이나 집안 살림 이야기는 여기서 편하게 하세요.", dt: 1}
+      ];
+    }
+    seeds.forEach(function(s){
+      list.push({id:"s"+Math.random().toString(36).slice(2,8), from:"assi", who:s.who, text:s.text, t: t - s.dt*60000});
+    });
+    setMsgs(room, list);
+  }
+
+  function renderChat(){
+    var list = msgsOf(currentRoom);
+    var html = "";
+    list.forEach(function(m){
+      if(m.from === "me"){
+        html += '<div class="msg me">'
+              +   '<div class="av me">👑</div>'
+              +   '<div class="bubble-wrap">'
+              +     '<div class="who">유나(대장님)</div>'
+              +     '<div class="bubble">' + esc(m.text) + '</div>'
+              +     '<div class="stamp">' + esc(m.stamp || "") + '</div>'
+              +   '</div>'
+              + '</div>';
+      } else {
+        var a = ASSISTANTS[m.who] || ASSISTANTS.habi;
+        html += '<div class="msg">'
+              +   '<div class="av">' + a.emoji + '</div>'
+              +   '<div class="bubble-wrap">'
+              +     '<div class="who">' + a.name + ' <span class="role">' + a.role + '</span></div>'
+              +     '<div class="bubble">' + esc(m.text) + '</div>'
+              +     '<div class="stamp">' + esc(m.stamp || "") + '</div>'
+              +   '</div>'
+              + '</div>';
+      }
+    });
+    chatEl.innerHTML = html;
+    document.getElementById("chatCount").textContent = list.length + "개 대화";
+    Object.keys(pendingSet).forEach(function(w){
+      delete pendingSet[w];
+      typingIndicator(w);
+    });
+    scrollChat();
+  }
+  function scrollChat(){
+    requestAnimationFrame(function(){ chatEl.scrollTop = chatEl.scrollHeight; });
+  }
+
+  function setRoom(room){
+    if(!ROOMS[room]) room = "hall";
+    currentRoom = room;
+    save("room", room);
+    document.querySelectorAll(".subtab").forEach(function(b){
+      b.setAttribute("aria-selected", b.dataset.room === room ? "true" : "false");
+    });
+    document.getElementById("chatEm").textContent = ROOMS[room].em;
+    document.getElementById("chatTitle").textContent = ROOMS[room].name;
+    document.getElementById("chatSub").textContent = ROOMS[room].sub;
+    seedRoom(room);
+    renderChat();
+  }
+  document.querySelectorAll(".subtab").forEach(function(b){
+    b.addEventListener("click", function(){ setRoom(b.dataset.room); });
+  });
+  document.querySelectorAll("[data-room]").forEach(function(b){
+    if(b.classList.contains("pin") || b.classList.contains("room-item")){
+      b.addEventListener("click", function(){
+        setTab("meeting");
+        setRoom(b.dataset.room);
+      });
+    }
+  });
+
+  /* ---------------- reply engine ---------------- */
+  var rot = {habi:0, mdi:0, rami:0, arch:0};
+  function snip(text){
+    var t = text.replace(/@\S+/g, "").replace(/\s+/g, " ").trim();
+    if(!t) t = "이번 건";
+    return t.length > 22 ? t.slice(0,22) + "…" : t;
+  }
+  var LINES = {
+    habi: [
+      '네, 대장님. "{s}" 접수했습니다. 오늘 흐름에 맞춰 순서를 잡아 둘게요. 마감 있는 건 먼저 표시해 드릴까요?',
+      '확인했습니다. "{s}" 건은 제가 시간 후보를 두 개로 좁혀서 올려 둘게요. 고르시면 바로 확정할게요.',
+      '말씀대로 정리해 두겠습니다. "{s}" — 오전과 오후 중 어느 쪽이 편하신지만 알려 주세요.',
+      '네 대장님. "{s}" 관련해서 제가 확인할 것과 대장님이 정하실 것을 나눠서 한 장으로 정리해 두겠습니다.',
+      '"{s}" 알겠습니다. 지금 걸려 있는 일과 부딪히지 않는지 먼저 보고, 조정이 필요하면 바로 말씀드릴게요.'
+    ],
+    mdi: [
+      '"{s}" 쪽이면 최근 반응 좋은 상품부터 훑어보겠습니다. 눈에 띄는 3개만 추려서 보여드릴게요.',
+      '네, "{s}" 확인했습니다. 경쟁사 흐름이랑 가격대를 같이 놓고 비교해 드릴게요.',
+      '"{s}"는 카테고리 안에서도 편차가 커요. 상위 상품 리뷰 키워드부터 뽑아 볼게요.',
+      '알겠습니다. "{s}" 기획으로 묶는다면 구성과 문구 초안까지 제가 잡아 두겠습니다.'
+    ],
+    rami: [
+      '"{s}" 알겠습니다. 산책·급여 시간이랑 안 겹치게 순서 맞춰 둘게요.',
+      '네, "{s}" 챙겨 둘게요. 장보기 목록에도 같이 넣어 둘까요?',
+      '"{s}" 확인했습니다. 집에 필요한 것들 목록으로 정리해서 한 번에 볼 수 있게 해 둘게요.',
+      '알겠습니다. "{s}" — 오늘은 비가 안 와서 산책은 조금 길게 잡아도 괜찮겠어요.'
+    ],
+    arch: [
+      '"{s}" 정리해서 노션에 남겨 두겠습니다. 제목 · 핵심 3줄 · 바로 써먹을 한 줄, 이 구성으로요.',
+      '네, "{s}" 아카이브에 넣어 둘게요. 나중에 찾기 쉽게 태그도 같이 붙여 두겠습니다.',
+      '"{s}" 받았습니다. 원문 링크와 요약을 같이 저장하고, 실무에 어떻게 쓸지 한 줄 덧붙일게요.',
+      '알겠습니다. "{s}"는 기존에 정리한 것과 겹치는지 먼저 확인하고, 겹치면 합쳐서 정리할게요.'
+    ]
+  };
+  var ROOM_TAIL = {
+    cmd: "",
+    hall: "",
+    lounge: ""
+  };
+
+  function mentionTargets(text){
+    var found = [];
+    if(/@all\b/.test(text)) return ORDER.slice();
+    if(/@하비서/.test(text)) found.push("habi");
+    if(/@엠디/.test(text)) found.push("mdi");
+    if(/@라미/.test(text)) found.push("rami");
+    if(/@아카이브/.test(text)) found.push("arch");
+    return found;
+  }
+  var KEYWORDS = [
+    ["arch", ["노션","정리","요약","저장","아카이브","프롬프트","ai","링크","기록"]],
+    ["mdi",  ["상품","매출","쿠팡","트렌드","커머스","리뷰","기획전","프로모션","재고","판매","광고"]],
+    ["rami", ["강아지","반려견","사료","산책","병원","예방접종","장보기","청소","집안","저녁","밥"]],
+    ["habi", ["일정","회의","캘린더","마감","보고","약속","출장","내일","오늘","이번 주","할 일","리마인드"]]
+  ];
+  function keywordTargets(text){
+    var low = text.toLowerCase();
+    var out = [];
+    KEYWORDS.forEach(function(pair){
+      if(out.indexOf(pair[0]) >= 0) return;
+      for(var i=0;i<pair[1].length;i++){
+        if(low.indexOf(pair[1][i].toLowerCase()) >= 0){ out.push(pair[0]); break; }
+      }
+    });
+    return out;
+  }
+  function makeReply(who, text){
+    var arr = LINES[who] || LINES.habi;
+    var i = rot[who] % arr.length;
+    rot[who]++;
+    return arr[i].replace("{s}", snip(text)) + (ROOM_TAIL[currentRoom] || "");
+  }
+
+  function appendMsg(m){
+    var list = msgsOf(currentRoom);
+    list.push(m);
+    setMsgs(currentRoom, list);
+    renderChat();
+  }
+
+  function typingIndicator(who){
+    var a = ASSISTANTS[who] || ASSISTANTS.habi;
+    var d = document.createElement("div");
+    d.className = "msg typing";
+    d.dataset.typing = who;
+    d.innerHTML = '<div class="av">' + a.emoji + '</div>'
+                + '<div class="bubble-wrap"><div class="who">' + a.name + ' <span class="role">입력 중</span></div>'
+                + '<div class="bubble"><i></i><i></i><i></i></div></div>';
+    chatEl.appendChild(d);
+    pendingSet[who] = d;
+    scrollChat();
+    return d;
+  }
+  function clearTyping(who){
+    var el = pendingSet[who];
+    if(el && el.parentNode) el.parentNode.removeChild(el);
+    delete pendingSet[who];
+  }
+
+  var pending = 0;
+  function sendMessage(){
+    var text = (inputEl.value || "").trim();
+    if(!text) return;
+    inputEl.value = "";
+    autoGrow();
+    updateMentionChips();
+
+    appendMsg({id:"u"+Date.now().toString(36), from:"me", text:text, t:Date.now(), stamp:nowHM()});
+
+    var targets = mentionTargets(text);
+    if(!targets.length){
+      var kw = keywordTargets(text);
+      if(kw.length){
+        targets = kw.slice(0,2);
+      } else {
+        targets = [currentRoom === "lounge" ? "rami" : "habi"];
+      }
+    }
+    // keep order stable, drop dupes
+    targets = targets.filter(function(v,i){ return targets.indexOf(v) === i; });
+
+    targets.forEach(function(who, idx){
+      var delay = 1000 + idx * 850;
+      pending++;
+      setTimeout(function(){
+        typingIndicator(who);
+        setTimeout(function(){
+          clearTyping(who);
+          appendMsg({id:"a"+Math.random().toString(36).slice(2,8), from:"assi", who:who,
+                     text:makeReply(who, text), t:Date.now(), stamp:nowHM()});
+          pending--;
+        }, 900);
+      }, delay);
+    });
+  }
+
+  inputEl.addEventListener("input", function(){ autoGrow(); updateMentionChips(); });
+  inputEl.addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.shiftKey && !e.isComposing){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  sendBtn.addEventListener("click", sendMessage);
+  function autoGrow(){
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 104) + "px";
+  }
+
+  /* mention chips */
+  var mentionChips = Array.prototype.slice.call(document.querySelectorAll("#mentions .m-chip"));
+  function updateMentionChips(){
+    var v = inputEl.value || "";
+    mentionChips.forEach(function(c){
+      var m = c.dataset.mention;
+      if(!m) return;
+      var hit = (m === "all") ? /@all\b/.test(v)
+                              : (v.indexOf("@" + ASSISTANTS[m].name) >= 0);
+      c.classList.toggle("mentioned", hit);
+    });
+  }
+  mentionChips.forEach(function(c){
+    if(c.dataset.sender){
+      c.addEventListener("click", function(){
+        toast("발신자는 유나(대장님) 한 분이에요");
+      });
+      return;
+    }
+    c.addEventListener("click", function(){
+      var m = c.dataset.mention;
+      var token = (m === "all") ? "@all " : ("@" + ASSISTANTS[m].name + " ");
+      var v = inputEl.value || "";
+      if(v.indexOf(token.trim()) >= 0){ inputEl.focus(); return; }
+      inputEl.value = (v && !/\s$/.test(v) ? v + " " : v) + token;
+      inputEl.focus();
+      autoGrow();
+      updateMentionChips();
+    });
+  });
+
+  /* ---------------- office map ---------------- */
+  var officeMap = document.getElementById("officeMap");
+  var btnBasic = document.getElementById("btnMapBasic");
+  var btnClay = document.getElementById("btnMapClay");
+  var btnMotion = document.getElementById("btnMotion");
+
+  function applyMapStyle(style){
+    officeMap.classList.toggle("clay", style === "clay");
+    btnBasic.classList.toggle("on", style !== "clay");
+    btnBasic.setAttribute("aria-pressed", style !== "clay" ? "true" : "false");
+    btnClay.classList.toggle("on", style === "clay");
+    btnClay.setAttribute("aria-pressed", style === "clay" ? "true" : "false");
+    save("mapStyle", style);
+  }
+  function applyMotion(on){
+    officeMap.classList.toggle("motion", !!on);
+    btnMotion.classList.toggle("on", !!on);
+    btnMotion.setAttribute("aria-pressed", on ? "true" : "false");
+    btnMotion.textContent = on ? "✨ 움직임 ON" : "✨ 움직임 OFF";
+    save("motion", !!on);
+  }
+  btnBasic.addEventListener("click", function(){ applyMapStyle("basic"); });
+  btnClay.addEventListener("click", function(){ applyMapStyle("clay"); });
+  btnMotion.addEventListener("click", function(){ applyMotion(!officeMap.classList.contains("motion")); });
+  applyMapStyle(load("mapStyle", "basic"));
+  applyMotion(load("motion", true));
+
+  /* ---------------- workroom ---------------- */
+  var DEFAULT_TODOS = [
+    {id:"d1", text:"오늘 브리핑에서 챙길 것 3개 표시", done:true},
+    {id:"d2", text:"비서실 위젯 값 맞추기", done:false},
+    {id:"d3", text:"정리할 링크 노션에 옮기기", done:false}
+  ];
+  var todos = load("todos", DEFAULT_TODOS);
+  var todoFilter = "all";
+  var todoList = document.getElementById("todoList");
+  var todoInput = document.getElementById("todoInput");
+
+  function renderTodos(){
+    var shown = todos.filter(function(t){
+      if(todoFilter === "open") return !t.done;
+      if(todoFilter === "done") return t.done;
+      return true;
+    });
+    if(!shown.length){
+      todoList.innerHTML = '<div class="empty">' +
+        (todos.length ? "이 필터에는 항목이 없어요" : "아직 할 일이 없어요. 하나 적어 볼까요?") + '</div>';
+    } else {
+      todoList.innerHTML = shown.map(function(t){
+        return '<div class="todo ' + (t.done ? "done" : "") + '" data-id="' + t.id + '">'
+             +   '<button class="ck ' + (t.done ? "on" : "") + '" role="checkbox" aria-checked="' + (t.done ? "true" : "false") + '" aria-label="완료 표시">✓</button>'
+             +   '<div class="todo-txt">' + esc(t.text) + '</div>'
+             +   '<button class="del" aria-label="삭제">✕</button>'
+             + '</div>';
+      }).join("");
+    }
+    var done = todos.filter(function(t){ return t.done; }).length;
+    var pct = todos.length ? Math.round(done / todos.length * 100) : 0;
+    document.getElementById("workCount").textContent = done + " / " + todos.length + " 완료";
+    document.getElementById("workPct").textContent = pct + "%";
+    document.getElementById("workBar").style.width = pct + "%";
+  }
+  function saveTodos(){ save("todos", todos); }
+
+  function addTodo(){
+    var v = (todoInput.value || "").trim();
+    if(!v) { todoInput.focus(); return; }
+    todos.unshift({id:"t"+Date.now().toString(36), text:v, done:false});
+    todoInput.value = "";
+    saveTodos();
+    renderTodos();
+    flashSave("저장됨");
+  }
+  document.getElementById("todoAdd").addEventListener("click", addTodo);
+  todoInput.addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); addTodo(); }
+  });
+  todoList.addEventListener("click", function(e){
+    var row = e.target.closest(".todo");
+    if(!row) return;
+    var id = row.dataset.id;
+    var item = todos.filter(function(t){ return t.id === id; })[0];
+    if(!item) return;
+    if(e.target.closest(".ck")){
+      item.done = !item.done;
+      saveTodos(); renderTodos();
+      flashSave(item.done ? "완료 표시" : "되돌림");
+    } else if(e.target.closest(".del")){
+      todos = todos.filter(function(t){ return t.id !== id; });
+      saveTodos(); renderTodos();
+      flashSave("삭제됨");
+    }
+  });
+  document.querySelectorAll(".filt").forEach(function(b){
+    b.addEventListener("click", function(){
+      todoFilter = b.dataset.filter;
+      document.querySelectorAll(".filt").forEach(function(x){ x.classList.toggle("on", x === b); });
+      renderTodos();
+    });
+  });
+
+  /* ---------------- assistant status ---------------- */
+  var STATUS_CYCLE = ["on","busy","rest"];
+  var STATUS_LABEL = {on:"대기 중", busy:"지휘 중", rest:"휴식"};
+  var assiState = load("assiState", {});
+  var assistList = document.getElementById("assistList");
+
+  function renderAssistants(){
+    assistList.innerHTML = ORDER.map(function(key){
+      var a = ASSISTANTS[key];
+      var st = assiState[key] || a.status;
+      var cls = st === "on" ? "on" : (st === "busy" ? "busy" : "rest");
+      var label = st === "on" ? "대기 중" : (st === "busy" ? a.statusText : "휴식");
+      var dot = st === "rest" ? "⚪" : (st === "busy" ? "🟡" : "🟢");
+      return '<div class="a-card" data-key="' + key + '">'
+           +   '<div class="a-av">' + a.emoji + '</div>'
+           +   '<div class="a-body">'
+           +     '<div class="a-top">'
+           +       '<span class="a-name">' + a.name + '</span>'
+           +       '<span class="a-role">' + a.role + '</span>'
+           +       '<button class="status ' + cls + '" data-key="' + key + '">' + dot + ' ' + label + '</button>'
+           +     '</div>'
+           +     '<div class="a-task"><b>최근 한 일</b> · ' + a.last + '</div>'
+           +     '<div class="a-tags">' + a.tags.map(function(t){ return '<span class="tag">' + t + '</span>'; }).join("") + '</div>'
+           +   '</div>'
+           + '</div>';
+    }).join("");
+
+    var working = ORDER.filter(function(k){
+      var st = assiState[k] || ASSISTANTS[k].status;
+      return st !== "rest";
+    }).length;
+    document.getElementById("sumText").textContent =
+      "4명 중 " + working + "명 가동 중 · 대장님 지시 대기";
+    var onEl = document.getElementById("onCount");
+    if(onEl) onEl.textContent = "👥 ON " + (working + 1) + "명";
+  }
+  assistList.addEventListener("click", function(e){
+    var btn = e.target.closest(".status");
+    if(!btn) return;
+    var key = btn.dataset.key;
+    var cur = assiState[key] || ASSISTANTS[key].status;
+    var next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(cur) + 1) % STATUS_CYCLE.length];
+    assiState[key] = next;
+    save("assiState", assiState);
+    renderAssistants();
+    flashSave("상태 변경");
+  });
+
+  /* ---------------- AI gauges ---------------- */
+  var gaugeState = load("gauges", {routine:62, workload:46, energy:74});
+  var gaugeEls = Array.prototype.slice.call(document.querySelectorAll(".gauge"));
+  function insightFor(s){
+    var out = [];
+    if(s.workload >= 75 && s.energy < 50){
+      out.push("업무량이 높고 에너지가 낮아요. <b>큰 일 하나만</b> 골라 먼저 끝내는 게 좋겠어요.");
+    } else if(s.energy >= 70 && s.workload >= 60){
+      out.push("지금이 집중 구간이에요. <b>방해 없는 40분</b>을 먼저 확보해 볼까요?");
+    } else if(s.routine < 40){
+      out.push("루틴이 아직 덜 채워졌어요. <b>가벼운 것부터 하나</b> 시작하면 흐름이 붙어요.");
+    } else if(s.workload <= 35 && s.energy >= 60){
+      out.push("여유가 있는 날이에요. <b>밀린 정리</b>나 새로 보고 싶던 걸 꺼내기 좋아요.");
+    } else {
+      out.push("균형이 괜찮아요. 지금 페이스면 <b>오늘 계획대로</b> 마무리될 것 같아요.");
+    }
+    if(s.routine >= 80) out.push("루틴은 거의 다 왔어요 👏");
+    return out.join(" ");
+  }
+  function paintGauges(){
+    gaugeEls.forEach(function(g){
+      var key = g.dataset.key;
+      var val = Math.max(0, Math.min(100, Number(gaugeState[key]) || 0));
+      var bar = g.querySelector(".g-bar");
+      var fill = bar.querySelector("span");
+      var num = g.querySelector(".g-val");
+      var range = g.querySelector("input[type=range]");
+      fill.style.width = val + "%";
+      num.textContent = val + "%";
+      if(range && Number(range.value) !== val) range.value = val;
+      bar.classList.toggle("low", val < 35);
+      bar.classList.toggle("hot", val >= 80);
+    });
+    document.getElementById("aiInsight").innerHTML = "💡 " + insightFor(gaugeState);
+  }
+  gaugeEls.forEach(function(g){
+    var range = g.querySelector("input[type=range]");
+    range.addEventListener("input", function(){
+      gaugeState[g.dataset.key] = Number(range.value);
+      paintGauges();
+      save("gauges", gaugeState);
+    });
+    range.addEventListener("change", function(){ flashSave("저장됨"); });
+  });
+  document.getElementById("aiReset").addEventListener("click", function(){
+    gaugeState = {routine:62, workload:46, energy:74};
+    save("gauges", gaugeState);
+    paintGauges();
+    flashSave("되돌림");
+  });
+
+  /* ---------------- memo ---------------- */
+  var memoEl = document.getElementById("memo");
+  var memoTimer = null;
+  var memoMeta = load("memoMeta", null);
+  memoEl.value = load("memo", "");
+
+  function paintMemoMeta(){
+    document.getElementById("memoCount").textContent = memoEl.value.length + "자";
+    document.getElementById("memoSaved").textContent =
+      memoMeta ? "마지막 저장 " + memoMeta : "자동 저장";
+  }
+  memoEl.addEventListener("input", function(){
+    paintMemoMeta();
+    if(memoTimer) clearTimeout(memoTimer);
+    memoTimer = setTimeout(function(){
+      save("memo", memoEl.value);
+      memoMeta = nowHM();
+      save("memoMeta", memoMeta);
+      paintMemoMeta();
+      flashSave("저장됨");
+    }, 450);
+  });
+  document.getElementById("memoClear").addEventListener("click", function(){
+    if(!memoEl.value){ return; }
+    if(confirm("메모를 전부 지울까요? 되돌릴 수 없어요.")){
+      memoEl.value = "";
+      save("memo", "");
+      memoMeta = nowHM();
+      save("memoMeta", memoMeta);
+      paintMemoMeta();
+      flashSave("지움");
+      toast("메모를 비웠어요");
+    }
+  });
+
+  /* ---------------- boot ---------------- */
+  setRoom(currentRoom);
+  renderTodos();
+  renderAssistants();
+  paintGauges();
+  paintMemoMeta();
+  updateMentionChips();
+
+  var savedTab = load("tab", "map");
+  if(savedTab && panels[savedTab]) { /* keep map as the landing tab */ }
+  setTab("map");
+
+  // warm the clay image in the background so the toggle feels instant
+  window.addEventListener("load", function(){
+    var im = new Image();
+    im.src = "assets/office-clay.jpg";
+  });
+})();
+</script>
+</body>
+</html>
