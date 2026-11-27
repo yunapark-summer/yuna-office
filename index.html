@@ -283,8 +283,8 @@
     background:linear-gradient(150deg,#FBF1E1,#F2E2C9); border:1px solid #EEDDC2;
   }
   .room-item .ri-txt{min-width:0; flex:1}
-  .room-item .ri-name{font-size:13px; font-weight:800; color:#4A3120; letter-spacing:-.03em}
-  .room-item .ri-desc{font-size:11px; color:var(--muted); font-weight:600; margin-top:1px; letter-spacing:-.02em}
+  .room-item .ri-name{display:block; font-size:13px; font-weight:800; color:#4A3120; letter-spacing:-.03em}
+  .room-item .ri-desc{display:block; font-size:11px; color:var(--muted); font-weight:600; margin-top:1px; letter-spacing:-.02em}
   .room-item .ri-go{font-size:11px; color:#B08A5E; font-weight:800; flex:0 0 auto}
 
   /* ---------- meeting ---------- */
@@ -353,6 +353,7 @@
     box-shadow:0 3px 10px rgba(139,69,19,.18);
   }
   .stamp{font-size:9.5px; color:#B9A78F; font-weight:600; margin-top:3px; padding:0 3px}
+  .stamp:empty{display:none}
   .msg.me .stamp{text-align:right}
   .typing .bubble{padding:11px 13px; display:inline-flex; gap:3px; align-items:center}
   .typing i{
@@ -968,36 +969,55 @@
     return t.length > 22 ? t.slice(0,22) + "…" : t;
   }
   var LINES = {
-    habi: [
-      '네, 대장님. "{s}" 접수했습니다. 오늘 흐름에 맞춰 순서를 잡아 둘게요. 마감 있는 건 먼저 표시해 드릴까요?',
-      '확인했습니다. "{s}" 건은 제가 시간 후보를 두 개로 좁혀서 올려 둘게요. 고르시면 바로 확정할게요.',
-      '말씀대로 정리해 두겠습니다. "{s}" — 오전과 오후 중 어느 쪽이 편하신지만 알려 주세요.',
-      '네 대장님. "{s}" 관련해서 제가 확인할 것과 대장님이 정하실 것을 나눠서 한 장으로 정리해 두겠습니다.',
-      '"{s}" 알겠습니다. 지금 걸려 있는 일과 부딪히지 않는지 먼저 보고, 조정이 필요하면 바로 말씀드릴게요.'
-    ],
-    mdi: [
-      '"{s}" 쪽이면 최근 반응 좋은 상품부터 훑어보겠습니다. 눈에 띄는 3개만 추려서 보여드릴게요.',
-      '네, "{s}" 확인했습니다. 경쟁사 흐름이랑 가격대를 같이 놓고 비교해 드릴게요.',
-      '"{s}"는 카테고리 안에서도 편차가 커요. 상위 상품 리뷰 키워드부터 뽑아 볼게요.',
-      '알겠습니다. "{s}" 기획으로 묶는다면 구성과 문구 초안까지 제가 잡아 두겠습니다.'
-    ],
-    rami: [
-      '"{s}" 알겠습니다. 산책·급여 시간이랑 안 겹치게 순서 맞춰 둘게요.',
-      '네, "{s}" 챙겨 둘게요. 장보기 목록에도 같이 넣어 둘까요?',
-      '"{s}" 확인했습니다. 집에 필요한 것들 목록으로 정리해서 한 번에 볼 수 있게 해 둘게요.',
-      '알겠습니다. "{s}" — 오늘은 비가 안 와서 산책은 조금 길게 잡아도 괜찮겠어요.'
-    ],
-    arch: [
-      '"{s}" 정리해서 노션에 남겨 두겠습니다. 제목 · 핵심 3줄 · 바로 써먹을 한 줄, 이 구성으로요.',
-      '네, "{s}" 아카이브에 넣어 둘게요. 나중에 찾기 쉽게 태그도 같이 붙여 두겠습니다.',
-      '"{s}" 받았습니다. 원문 링크와 요약을 같이 저장하고, 실무에 어떻게 쓸지 한 줄 덧붙일게요.',
-      '알겠습니다. "{s}"는 기존에 정리한 것과 겹치는지 먼저 확인하고, 겹치면 합쳐서 정리할게요.'
-    ]
-  };
-  var ROOM_TAIL = {
-    cmd: "",
-    hall: "",
-    lounge: ""
+    habi: {
+      main: [
+        '네, 대장님. "{s}" 접수했습니다. 오늘 흐름에 맞춰 순서를 잡아 둘게요. 마감 있는 건 먼저 표시해 드릴까요?',
+        '확인했습니다. "{s}" 건은 제가 시간 후보를 두 개로 좁혀서 올려 둘게요. 고르시면 바로 확정할게요.',
+        '말씀대로 정리해 두겠습니다. "{s}" — 오전과 오후 중 어느 쪽이 편하신지만 알려 주세요.',
+        '네 대장님. "{s}" 관련해서 제가 확인할 것과 대장님이 정하실 것을 나눠서 한 장으로 정리해 두겠습니다.',
+        '"{s}" 알겠습니다. 지금 걸려 있는 일과 부딪히지 않는지 먼저 보고, 조정이 필요하면 바로 말씀드릴게요.'
+      ],
+      support: [
+        '전체 순서는 제가 시간표로 잡아 둘게요. 확정만 해 주세요.',
+        '제가 뒤에서 흐름 계속 보고 있을게요. 급한 게 생기면 바로 말씀드릴게요.'
+      ]
+    },
+    mdi: {
+      main: [
+        '"{s}" 쪽이면 최근 반응 좋은 상품부터 훑어보겠습니다. 눈에 띄는 3개만 추려서 보여드릴게요.',
+        '네, "{s}" 확인했습니다. 경쟁사 흐름이랑 가격대를 같이 놓고 비교해 드릴게요.',
+        '"{s}"는 카테고리 안에서도 편차가 커요. 상위 상품 리뷰 키워드부터 뽑아 볼게요.',
+        '알겠습니다. "{s}" 기획으로 묶는다면 구성과 문구 초안까지 제가 잡아 두겠습니다.'
+      ],
+      support: [
+        '이번 건은 제 영역 밖이에요. 상품 쪽에서 볼 일 생기면 바로 붙을게요.',
+        '저는 옆에서 대기할게요. 커머스 쪽 확인할 게 있으면 불러 주세요.'
+      ]
+    },
+    rami: {
+      main: [
+        '"{s}" 알겠습니다. 산책·급여 시간이랑 안 겹치게 순서 맞춰 둘게요.',
+        '네, "{s}" 챙겨 둘게요. 장보기 목록에도 같이 넣어 둘까요?',
+        '"{s}" 확인했습니다. 집에 필요한 것들 목록으로 정리해서 한 번에 볼 수 있게 해 둘게요.',
+        '알겠습니다. "{s}" — 오늘은 비가 안 와서 산책은 조금 길게 잡아도 괜찮겠어요.'
+      ],
+      support: [
+        '산책·집안 쪽은 제가 챙길게요. 나머지는 하비서 정리대로 따를게요.',
+        '집 쪽은 걱정 마세요. 시간만 정해 주시면 맞춰 둘게요.'
+      ]
+    },
+    arch: {
+      main: [
+        '"{s}" 정리해서 노션에 남겨 두겠습니다. 제목 · 핵심 3줄 · 바로 써먹을 한 줄, 이 구성으로요.',
+        '네, "{s}" 아카이브에 넣어 둘게요. 나중에 찾기 쉽게 태그도 같이 붙여 두겠습니다.',
+        '"{s}" 받았습니다. 원문 링크와 요약을 같이 저장하고, 실무에 어떻게 쓸지 한 줄 덧붙일게요.',
+        '알겠습니다. "{s}"는 기존에 정리한 것과 겹치는지 먼저 확인하고, 겹치면 합쳐서 정리할게요.'
+      ],
+      support: [
+        '정리된 내용은 제가 노션에 남겨 둘게요. 태그도 같이 붙여 둘게요.',
+        '마무리되면 링크랑 요약해서 아카이브에 넣어 둘게요.'
+      ]
+    }
   };
 
   function mentionTargets(text){
@@ -1026,11 +1046,13 @@
     });
     return out;
   }
-  function makeReply(who, text){
-    var arr = LINES[who] || LINES.habi;
+  function makeReply(who, text, mode){
+    var set = LINES[who] || LINES.habi;
+    var arr = (mode === "support") ? set.support : set.main;
     var i = rot[who] % arr.length;
     rot[who]++;
-    return arr[i].replace("{s}", snip(text)) + (ROOM_TAIL[currentRoom] || "");
+    var line = arr[i];
+    return line.indexOf("{s}") >= 0 ? line.replace("{s}", snip(text)) : line;
   }
 
   function appendMsg(m){
@@ -1069,9 +1091,11 @@
 
     appendMsg({id:"u"+Date.now().toString(36), from:"me", text:text, t:Date.now(), stamp:nowHM()});
 
-    var targets = mentionTargets(text);
+    var hasAll = /@all\b/.test(text);
+    var named = mentionTargets(text);
+    var kw = keywordTargets(text);
+    var targets = named.slice();
     if(!targets.length){
-      var kw = keywordTargets(text);
       if(kw.length){
         targets = kw.slice(0,2);
       } else {
@@ -1088,8 +1112,9 @@
         typingIndicator(who);
         setTimeout(function(){
           clearTyping(who);
+          var mode = ((!hasAll && named.indexOf(who) >= 0) || kw.indexOf(who) >= 0) ? "main" : "support";
           appendMsg({id:"a"+Math.random().toString(36).slice(2,8), from:"assi", who:who,
-                     text:makeReply(who, text), t:Date.now(), stamp:nowHM()});
+                     text:makeReply(who, text, mode), t:Date.now(), stamp:nowHM()});
           pending--;
         }, 900);
       }, delay);
