@@ -1321,10 +1321,12 @@
   var gaugeEls = Array.prototype.slice.call(document.querySelectorAll(".gauge"));
   function insightFor(s){
     var out = [];
-    if(s.workload >= 75 && s.energy < 50){
+    if(s.workload >= 70 && s.energy < 55){
       out.push("업무량이 높고 에너지가 낮아요. <b>큰 일 하나만</b> 골라 먼저 끝내는 게 좋겠어요.");
     } else if(s.energy >= 70 && s.workload >= 60){
       out.push("지금이 집중 구간이에요. <b>방해 없는 40분</b>을 먼저 확보해 볼까요?");
+    } else if(s.workload >= 80){
+      out.push("오늘은 양이 많은 날이에요. <b>마감 순서대로</b> 줄 세우고 가운데 한 개는 내일로 미뤄도 좋아요.");
     } else if(s.routine < 40){
       out.push("루틴이 아직 덜 채워졌어요. <b>가벼운 것부터 하나</b> 시작하면 흐름이 붙어요.");
     } else if(s.workload <= 35 && s.energy >= 60){
